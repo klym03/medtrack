@@ -1,0 +1,16 @@
+{
+  "name": "medassist-nodejs-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "backend/*",
+    "shared/*"
+  ],
+  "scripts": {
+    "build": "npm run build -ws --if-present",
+    "start:auth-service": "npm run start:dev -w auth-service"
+  },
+  "devDependencies": {
+    "typescript": "~5.7.3"
+  }
+} 

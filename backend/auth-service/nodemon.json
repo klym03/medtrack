@@ -1,0 +1,6 @@
+{
+  "watch": ["src", "../../shared"],
+  "ext": "ts,json",
+  "ignore": ["src/**/*.spec.ts", "dist"],
+  "exec": "npm run build && node dist/backend/auth-service/src/main.js"
+} 

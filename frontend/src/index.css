@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-50 font-sans;
+  /* Якщо bg-grid-pattern та bg-grid-size визначені в темі Tailwind,
+     то можна використовувати @apply bg-grid-pattern bg-grid-size;
+     В іншому випадку, їх можна додати як звичайні CSS властивості, 
+     але краще, щоб Tailwind їх генерував, якщо вони є в конфігурації.
+     Оскільки вони є в backgroundImage та backgroundSize, @apply має спрацювати.
+  */
+  @apply bg-grid-pattern bg-grid-size;
+}
+
+/* Попередній коментар видалено для чистоти тесту */
