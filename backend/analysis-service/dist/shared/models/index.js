@@ -18,4 +18,7 @@ __exportStar(require("./user.entity"), exports);
 __exportStar(require("./analysis.entity"), exports);
 __exportStar(require("./indicator.entity"), exports);
 __exportStar(require("./blood-pressure-reading.entity"), exports);
+__exportStar(require("./medication.entity"), exports);
+__exportStar(require("./medication-reminder.entity"), exports);
+__exportStar(require("./indicator-reference-range.entity"), exports);
 //# sourceMappingURL=index.js.map

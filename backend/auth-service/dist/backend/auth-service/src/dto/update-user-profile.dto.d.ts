@@ -1,13 +1,12 @@
 export declare class UpdateUserProfileDto {
     name?: string;
     dateOfBirth?: string;
-    sex?: string;
+    sex?: 'Male' | 'Female' | 'Other' | 'PreferNotToSay';
     heightCm?: number;
     weightKg?: number;
-    isSmoker?: string;
-    chronicConditions?: string;
-    currentMedications?: string;
-    profileComplete?: boolean;
     usualSystolic?: number;
     usualDiastolic?: number;
+    isSmoker?: boolean;
+    chronicConditions?: string;
+    currentMedications?: string;
 }

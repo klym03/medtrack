@@ -17,17 +17,16 @@ exports.UpdateUserProfileDto = UpdateUserProfileDto;
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.Length)(1, 100),
     __metadata("design:type", String)
 ], UpdateUserProfileDto.prototype, "name", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsDateString)(),
+    (0, class_validator_1.IsISO8601)(),
     __metadata("design:type", String)
 ], UpdateUserProfileDto.prototype, "dateOfBirth", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsIn)(['Male', 'Female', 'Other', 'PreferNotToSay']),
     __metadata("design:type", String)
 ], UpdateUserProfileDto.prototype, "sex", void 0);
 __decorate([
@@ -46,26 +45,6 @@ __decorate([
 ], UpdateUserProfileDto.prototype, "weightKg", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], UpdateUserProfileDto.prototype, "isSmoker", void 0);
-__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], UpdateUserProfileDto.prototype, "chronicConditions", void 0);
-__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], UpdateUserProfileDto.prototype, "currentMedications", void 0);
-__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsBoolean)(),
-    __metadata("design:type", Boolean)
-], UpdateUserProfileDto.prototype, "profileComplete", void 0);
-__decorate([
-    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.Min)(50),
     (0, class_validator_1.Max)(300),
@@ -78,4 +57,18 @@ __decorate([
     (0, class_validator_1.Max)(200),
     __metadata("design:type", Number)
 ], UpdateUserProfileDto.prototype, "usualDiastolic", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Boolean)
+], UpdateUserProfileDto.prototype, "isSmoker", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpdateUserProfileDto.prototype, "chronicConditions", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], UpdateUserProfileDto.prototype, "currentMedications", void 0);
 //# sourceMappingURL=update-user-profile.dto.js.map

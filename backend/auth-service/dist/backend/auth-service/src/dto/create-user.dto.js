@@ -49,9 +49,9 @@ __decorate([
     __metadata("design:type", Number)
 ], CreateUserDto.prototype, "weightKg", void 0);
 __decorate([
-    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsBoolean)(),
     (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
+    __metadata("design:type", Boolean)
 ], CreateUserDto.prototype, "isSmoker", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),

@@ -12,10 +12,18 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
-const models_1 = require("../../../shared/models/index.js");
-const analysis_module_1 = require("./analysis.module");
+const user_entity_1 = require("../../../shared/models/user.entity");
+const analysis_entity_1 = require("../../../shared/models/analysis.entity");
+const indicator_entity_1 = require("../../../shared/models/indicator.entity");
+const blood_pressure_reading_entity_1 = require("../../../shared/models/blood-pressure-reading.entity");
+const medication_entity_1 = require("../../../shared/models/medication.entity");
+const medication_reminder_entity_1 = require("../../../shared/models/medication-reminder.entity");
+const indicator_reference_range_entity_1 = require("../../../shared/models/indicator-reference-range.entity");
+const analyses_module_1 = require("./analyses.module");
 const blood_pressure_module_1 = require("./blood-pressure/blood-pressure.module");
-const path = require("path");
+const medication_module_1 = require("./medication/medication.module");
+const medication_reminder_module_1 = require("./medication-reminder.module");
+const user_profile_context_module_1 = require("./user-profile-context.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -24,21 +32,36 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
-                envFilePath: path.resolve(__dirname, '..', '..', '..', '.env'),
+                envFilePath: '../../.env',
             }),
             typeorm_1.TypeOrmModule.forRootAsync({
                 imports: [config_1.ConfigModule],
-                useFactory: (configService) => ({
-                    type: 'postgres',
-                    url: configService.get('ANALYSIS_DATABASE_URL'),
-                    entities: [models_1.Analysis, models_1.Indicator, models_1.BloodPressureReading, models_1.User],
-                    synchronize: configService.get('NODE_ENV') !== 'production',
-                    logging: configService.get('NODE_ENV') !== 'production',
-                }),
+                useFactory: (configService) => {
+                    const databaseUrl = configService.get('DATABASE_URL');
+                    if (!databaseUrl) {
+                        throw new Error('DATABASE_URL environment variable is not set for analysis service');
+                    }
+                    const url = new URL(databaseUrl);
+                    return {
+                        type: 'postgres',
+                        host: url.hostname,
+                        port: parseInt(url.port, 10) || 5432,
+                        username: url.username,
+                        password: url.password,
+                        database: url.pathname.slice(1),
+                        entities: [user_entity_1.User, analysis_entity_1.Analysis, indicator_entity_1.Indicator, blood_pressure_reading_entity_1.BloodPressureReading, medication_entity_1.Medication, medication_reminder_entity_1.MedicationReminder, indicator_reference_range_entity_1.IndicatorReferenceRange],
+                        synchronize: false,
+                        dropSchema: false,
+                        logging: true,
+                    };
+                },
                 inject: [config_1.ConfigService],
             }),
-            analysis_module_1.AnalysisModule,
+            analyses_module_1.AnalysesModule,
             blood_pressure_module_1.BloodPressureModule,
+            medication_module_1.MedicationModule,
+            medication_reminder_module_1.MedicationReminderModule,
+            user_profile_context_module_1.UserProfileContextModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

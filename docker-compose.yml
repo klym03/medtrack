@@ -1,0 +1,67 @@
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: backend/api-gateway/Dockerfile
+    ports:
+      - "8080:3005"
+    volumes:
+      - ./backend/api-gateway:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      AUTH_SERVICE_URL: http://auth-service:3000
+      ANALYSIS_SERVICE_URL: http://analysis-service:3001
+      CHAT_SERVICE_URL: http://chat-service:3002
+      # PORT: 3005
+    depends_on:
+      - auth-service
+      - analysis-service
+      - chat-service
+    networks:
+      - medassist-network
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: backend/auth-service/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend/auth-service:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      PORT: 3000
+    networks:
+      - medassist-network
+
+  analysis-service:
+    build:
+      context: .
+      dockerfile: backend/analysis-service/Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend/analysis-service:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      PORT: 3001
+    networks:
+      - medassist-network
+
+  chat-service:
+    build:
+      context: .
+      dockerfile: backend/chat-service/Dockerfile
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./backend/chat-service:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      PORT: 3002
+    networks:
+      - medassist-network
+
+networks:
+  medassist-network:
+    driver: bridge

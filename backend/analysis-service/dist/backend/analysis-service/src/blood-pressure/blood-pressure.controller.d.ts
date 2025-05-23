@@ -3,6 +3,7 @@ import { CreateBloodPressureReadingDto, UpdateBloodPressureReadingDto } from './
 import { BloodPressureReading } from '../../../../shared/models/blood-pressure-reading.entity';
 export declare class BloodPressureController {
     private readonly bpService;
+    private readonly logger;
     constructor(bpService: BloodPressureService);
     create(req: any, createDto: CreateBloodPressureReadingDto): Promise<BloodPressureReading>;
     findAllMyReadings(req: any): Promise<BloodPressureReading[]>;

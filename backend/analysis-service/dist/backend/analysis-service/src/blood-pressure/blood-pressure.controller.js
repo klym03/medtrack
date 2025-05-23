@@ -11,34 +11,38 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var BloodPressureController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BloodPressureController = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_auth_guard_1 = require("../../../../shared/jwt-auth.guard");
 const blood_pressure_service_1 = require("./blood-pressure.service");
 const dto_1 = require("./dto");
-let BloodPressureController = class BloodPressureController {
+let BloodPressureController = BloodPressureController_1 = class BloodPressureController {
     constructor(bpService) {
         this.bpService = bpService;
+        this.logger = new common_1.Logger(BloodPressureController_1.name);
     }
     async create(req, createDto) {
-        const userId = req.user.userId;
+        this.logger.log(`Attempting to create blood pressure reading. User object from request: ${JSON.stringify(req.user)}`);
+        const userId = req.user.id;
+        this.logger.log(`Extracted userId: ${userId}`);
         return this.bpService.create(userId, createDto);
     }
     async findAllMyReadings(req) {
-        const userId = req.user.userId;
+        const userId = req.user.id;
         return this.bpService.findAllByUser(userId);
     }
     async findOne(readingId, req) {
-        const userId = req.user.userId;
+        const userId = req.user.id;
         return this.bpService.findOne(readingId, userId);
     }
     async update(readingId, req, updateDto) {
-        const userId = req.user.userId;
+        const userId = req.user.id;
         return this.bpService.update(readingId, userId, updateDto);
     }
     async remove(readingId, req) {
-        const userId = req.user.userId;
+        const userId = req.user.id;
         return this.bpService.remove(readingId, userId);
     }
 };
@@ -85,7 +89,7 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], BloodPressureController.prototype, "remove", null);
-exports.BloodPressureController = BloodPressureController = __decorate([
+exports.BloodPressureController = BloodPressureController = BloodPressureController_1 = __decorate([
     (0, common_1.Controller)('blood-pressure'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __metadata("design:paramtypes", [blood_pressure_service_1.BloodPressureService])

@@ -1,5 +1,7 @@
 import { Analysis } from './analysis.entity';
 import { BloodPressureReading } from './blood-pressure-reading.entity';
+import { Medication } from './medication.entity';
+import { MedicationReminder } from './medication-reminder.entity';
 export declare class User {
     id: string;
     name: string | null;
@@ -9,7 +11,7 @@ export declare class User {
     sex: string | null;
     heightCm: number | null;
     weightKg: number | null;
-    isSmoker: string | null;
+    isSmoker: boolean | null;
     chronicConditions: string | null;
     currentMedications: string | null;
     profileComplete: boolean;
@@ -17,6 +19,8 @@ export declare class User {
     usualDiastolic: number | null;
     analyses: Analysis[];
     bloodPressureReadings: BloodPressureReading[];
+    medications: Medication[];
+    medicationReminders: MedicationReminder[];
     createdAt: Date;
     updatedAt: Date;
 }

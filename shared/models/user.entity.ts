@@ -1,6 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { Analysis } from './analysis.entity';
 import { BloodPressureReading } from './blood-pressure-reading.entity';
+import { Medication } from './medication.entity';
+import { MedicationReminder } from './medication-reminder.entity';
 
 @Entity('users')
 export class User {
@@ -13,7 +15,7 @@ export class User {
   @Column({ type: 'varchar', length: 100, unique: true, nullable: false })
   email: string;
 
-  @Column({ type: 'varchar', nullable: false }) // Зберігатимемо хеш пароля
+  @Column({ type: 'varchar', nullable: false })
   passwordHash: string;
 
   @Column({ type: 'date', nullable: true })
@@ -28,8 +30,8 @@ export class User {
   @Column({ type: 'float', nullable: true })
   weightKg: number | null;
 
-  @Column({ type: 'varchar', length: 10, nullable: true }) // 'yes', 'no', 'stopped'
-  isSmoker: string | null;
+  @Column({ type: 'boolean', nullable: true })
+  isSmoker: boolean | null;
 
   @Column({ type: 'text', nullable: true })
   chronicConditions: string | null; // Можна зберігати як JSON string або текст
@@ -46,13 +48,19 @@ export class User {
   @Column({ type: 'integer', nullable: true })
   usualDiastolic: number | null;
 
-  @OneToMany(() => Analysis, analysis => analysis.user)
+  @OneToMany(() => Analysis, (analysis: Analysis) => analysis.user)
   analyses: Analysis[];
 
-  @OneToMany(() => BloodPressureReading, reading => reading.user)
+  @OneToMany(() => BloodPressureReading, (reading: BloodPressureReading) => reading.user)
   bloodPressureReadings: BloodPressureReading[];
 
-  @CreateDateColumn()
+  @OneToMany(() => Medication, (medication: Medication) => medication.user)
+  medications: Medication[];
+
+  @OneToMany(() => MedicationReminder, (reminder: MedicationReminder) => reminder.user)
+  medicationReminders: MedicationReminder[];
+
+  @CreateDateColumn({ type: 'timestamp with time zone', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
   @UpdateDateColumn()

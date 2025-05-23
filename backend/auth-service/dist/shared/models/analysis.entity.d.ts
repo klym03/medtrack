@@ -5,6 +5,9 @@ export declare class Analysis {
     userId: string;
     user: User;
     filename: string | null;
+    originalName: string | null;
+    mimeType: string | null;
+    size: number | null;
     uploadTimestamp: Date;
     documentType: string | null;
     analysisDate: string | null;

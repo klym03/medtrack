@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BloodPressureReading } from '../../../../shared/models/blood-pressure-reading.entity';
-import { User } from '../../../../shared/models/user.entity'; // User потрібен для сервісу, якщо він там використовується
+import { BloodPressureReading } from '@shared/models/blood-pressure-reading.entity';
+import { User } from '@shared/models/user.entity'; // User потрібен для сервісу, якщо він там використовується
 import { BloodPressureService } from './blood-pressure.service';
 import { BloodPressureController } from './blood-pressure.controller';
 // Не забути імпортувати та налаштувати AuthModule або JwtStrategy, якщо потрібно для Guard

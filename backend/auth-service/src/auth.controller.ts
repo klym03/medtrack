@@ -1,16 +1,20 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, ValidationPipe, UseGuards, Get, Request, Patch } from '@nestjs/common';
-import { AuthService, SanitizedUser } from './auth.service';
+import { Controller, Post, Body, HttpCode, HttpStatus, ValidationPipe, UseGuards, Get, Request, Patch, Logger } from '@nestjs/common';
+import { AuthService, UserProfileResponse } from './auth.service';
 import { CreateUserDto, LoginUserDto, UpdateUserProfileDto } from './dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
+  private readonly logger = new Logger(AuthController.name);
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  async register(@Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createUserDto: CreateUserDto): Promise<SanitizedUser> {
-    return this.authService.register(createUserDto);
+  async register(@Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createUserDto: CreateUserDto): Promise<UserProfileResponse> {
+    this.logger.log('Attempting to register user...');
+    this.logger.log('Received DTO:', JSON.stringify(createUserDto));
+    const registeredUser = await this.authService.register(createUserDto);
+    return registeredUser as UserProfileResponse;
   }
 
   @Post('login')
@@ -21,9 +25,8 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
-  async getProfile(@Request() req): Promise<SanitizedUser> {
-    // req.user містить payload з JWT (id користувача як sub)
-    const userId = req.user.sub; 
+  async getProfile(@Request() req): Promise<UserProfileResponse> {
+    const userId = req.user.id;
     return this.authService.getUserProfile(userId);
   }
 
@@ -33,8 +36,8 @@ export class AuthController {
     @Request() req,
     @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, skipMissingProperties: true })) 
     updateUserProfileDto: UpdateUserProfileDto
-  ): Promise<SanitizedUser> {
-    const userId = req.user.sub;
+  ): Promise<UserProfileResponse> {
+    const userId = req.user.id;
     return this.authService.updateUserProfile(userId, updateUserProfileDto);
   }
 }

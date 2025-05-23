@@ -28,9 +28,9 @@ export class CreateUserDto {
   @IsOptional()
   weightKg?: number;
 
-  @IsString()
+  @IsBoolean()
   @IsOptional()
-  isSmoker?: string;
+  isSmoker?: boolean;
 
   @IsString()
   @IsOptional()

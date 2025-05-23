@@ -15,7 +15,16 @@ export class Analysis {
   user: User;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  filename: string | null;
+  filename: string | null; // This will store the unique savedFilename
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  originalName: string | null; // Added for original filename
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  mimeType: string | null; // Added for file mimetype
+
+  @Column({ type: 'int', nullable: true })
+  size: number | null; // Added for file size in bytes
 
   @CreateDateColumn() // Автоматично встановлюється при створенні
   uploadTimestamp: Date;

@@ -12,9 +12,8 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
-const models_1 = require("../../../shared/models/index.js");
+const models_1 = require("@shared/models");
 const auth_module_1 = require("./auth.module");
-const path = require("path");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -23,7 +22,7 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
-                envFilePath: path.resolve(__dirname, '..', '..', '..', '..', '..', '..', '.env'),
+                envFilePath: '../../.env',
             }),
             typeorm_1.TypeOrmModule.forRootAsync({
                 imports: [config_1.ConfigModule],
@@ -36,12 +35,13 @@ exports.AppModule = AppModule = __decorate([
                     return {
                         type: 'postgres',
                         host: url.hostname,
-                        port: parseInt(url.port, 10),
+                        port: parseInt(url.port, 10) || 5432,
                         username: url.username,
                         password: url.password,
                         database: url.pathname.slice(1),
-                        entities: [models_1.User, models_1.Analysis, models_1.Indicator, models_1.BloodPressureReading],
-                        synchronize: true,
+                        entities: [models_1.User, models_1.Analysis, models_1.Indicator, models_1.BloodPressureReading, models_1.Medication, models_1.MedicationReminder],
+                        synchronize: false,
+                        dropSchema: false,
                         logging: true,
                     };
                 },

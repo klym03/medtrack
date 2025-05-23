@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsDateString, IsEnum, IsNumber, IsBoolean, Min, Max, Length } from 'class-validator';
+import { IsOptional, IsString, IsISO8601, IsIn, IsNumber, Min, Max } from 'class-validator';
 
 // Можливі значення для статі та статусу куріння, якщо ви хочете їх обмежити
 // enum UserSex { MALE = 'male', FEMALE = 'female', OTHER = 'other' }
@@ -7,17 +7,15 @@ import { IsString, IsOptional, IsDateString, IsEnum, IsNumber, IsBoolean, Min, M
 export class UpdateUserProfileDto {
   @IsOptional()
   @IsString()
-  @Length(1, 100)
   name?: string;
 
   @IsOptional()
-  @IsDateString()
-  dateOfBirth?: string; // Зберігаємо як рядок YYYY-MM-DD для простоти валідації
+  @IsISO8601()
+  dateOfBirth?: string; // YYYY-MM-DD
 
   @IsOptional()
-  @IsString()
-  // @IsEnum(UserSex) // Розкоментуйте, якщо хочете використовувати enum
-  sex?: string; 
+  @IsIn(['Male', 'Female', 'Other', 'PreferNotToSay'])
+  sex?: 'Male' | 'Female' | 'Other' | 'PreferNotToSay';
 
   @IsOptional()
   @IsNumber()
@@ -31,32 +29,27 @@ export class UpdateUserProfileDto {
   @Max(500)
   weightKg?: number;
 
-  @IsOptional()
-  @IsString()
-  // @IsEnum(SmokerStatus) // Розкоментуйте, якщо хочете використовувати enum
-  isSmoker?: string;
-
-  @IsOptional()
-  @IsString()
-  chronicConditions?: string;
-
-  @IsOptional()
-  @IsString()
-  currentMedications?: string;
-
-  @IsOptional()
-  @IsBoolean()
-  profileComplete?: boolean; // Зазвичай це поле встановлюється сервером, але може бути опція для користувача
-
+  // Added other fields from UserEntity that might be relevant for a profile update
   @IsOptional()
   @IsNumber()
-  @Min(50)
+  @Min(50) // Припустимі значення для систолічного тиску
   @Max(300)
   usualSystolic?: number;
 
   @IsOptional()
   @IsNumber()
-  @Min(30)
+  @Min(30) // Припустимі значення для діастолічного тиску
   @Max(200)
   usualDiastolic?: number;
+
+  @IsOptional()
+  isSmoker?: boolean;
+
+  @IsOptional()
+  @IsString()
+  chronicConditions?: string; // Could be a comma-separated list or JSON string
+
+  @IsOptional()
+  @IsString()
+  currentMedications?: string; // Could be a comma-separated list or JSON string
 } 

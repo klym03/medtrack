@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BloodPressureReading } from '../../../../shared/models/blood-pressure-reading.entity';
-import { User } from '../../../../shared/models/user.entity'; // Потрібно для перевірки власника
+import { BloodPressureReading } from '@shared/models/blood-pressure-reading.entity';
+import { User } from '@shared/models/user.entity'; // Потрібно для перевірки власника
 import { CreateBloodPressureReadingDto, UpdateBloodPressureReadingDto } from './dto';
 
 @Injectable()

@@ -6,7 +6,7 @@ export declare class CreateUserDto {
     sex?: string;
     heightCm?: number;
     weightKg?: number;
-    isSmoker?: string;
+    isSmoker?: boolean;
     chronicConditions?: string;
     currentMedications?: string;
 }

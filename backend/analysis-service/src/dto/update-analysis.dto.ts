@@ -1,6 +1,7 @@
 import { IsString, IsOptional, IsArray, ValidateNested, Length, IsObject } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CreateIndicatorDto } from './create-indicator.dto'; // Припустимо, індикатори передаються так само
+// import { CreateIndicatorDto } from './create-indicator.dto'; // Замінено на UpdateIndicatorDto
+import { UpdateIndicatorDto } from './update-indicator.dto';
 
 export class UpdateAnalysisDto {
   @IsString()
@@ -24,9 +25,10 @@ export class UpdateAnalysisDto {
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => CreateIndicatorDto) // Для оновлення, можливо, знадобиться UpdateIndicatorDto, але поки використовуємо Create
+  // @Type(() => CreateIndicatorDto) // Замінено на UpdateIndicatorDto
+  @Type(() => UpdateIndicatorDto)
   @IsOptional()
-  indicators?: CreateIndicatorDto[];
+  indicators?: UpdateIndicatorDto[];
 
   @IsObject()
   @IsOptional()

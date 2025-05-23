@@ -3,15 +3,19 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User, Analysis, BloodPressureReading, Indicator } from '@shared/models';
+import { User } from '@shared/models/user.entity';
+import { Analysis } from '@shared/models/analysis.entity';
+import { BloodPressureReading } from '@shared/models/blood-pressure-reading.entity';
+import { Indicator } from '@shared/models/indicator.entity';
+import { Medication } from '@shared/models/medication.entity';
+import { MedicationReminder } from '@shared/models/medication-reminder.entity';
 import { AuthModule } from './auth.module';
-import * as path from 'path';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: path.resolve(__dirname, '..', '..', '..', '..', '..', '..', '.env'),
+      envFilePath: '../../.env',
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -21,17 +25,18 @@ import * as path from 'path';
           throw new Error('DATABASE_URL environment variable is not set');
         }
 
-        const url = new URL(databaseUrl);
+        const url = new URL(databaseUrl); 
         
         return {
           type: 'postgres',
           host: url.hostname,
-          port: parseInt(url.port, 10),
+          port: parseInt(url.port, 10) || 5432,
           username: url.username,
           password: url.password,
           database: url.pathname.slice(1),
-          entities: [User, Analysis, Indicator, BloodPressureReading],
-          synchronize: true,
+          entities: [User, Analysis, Indicator, BloodPressureReading, Medication, MedicationReminder],
+          synchronize: false,
+          dropSchema: false,
           logging: true,
         };
       },

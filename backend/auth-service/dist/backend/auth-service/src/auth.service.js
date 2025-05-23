@@ -11,18 +11,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var AuthService_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const models_1 = require("../../../shared/models/index.js");
+const models_1 = require("@shared/models");
 const bcrypt = require("bcrypt");
-let AuthService = class AuthService {
+let AuthService = AuthService_1 = class AuthService {
     constructor(userRepository, jwtService) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.logger = new common_1.Logger(AuthService_1.name);
     }
     sanitizeUser(user) {
         const { passwordHash, ...result } = user;
@@ -67,20 +69,69 @@ let AuthService = class AuthService {
         if (!user) {
             throw new common_1.NotFoundException('User not found');
         }
-        return this.sanitizeUser(user);
+        const sanitizedUser = this.sanitizeUser(user);
+        let age = null;
+        if (user.dateOfBirth) {
+            const birthDate = new Date(user.dateOfBirth);
+            const today = new Date();
+            age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+        }
+        let bmi = null;
+        if (user.heightCm && user.weightKg && user.heightCm > 0) {
+            const heightInMeters = user.heightCm / 100;
+            bmi = parseFloat((user.weightKg / (heightInMeters * heightInMeters)).toFixed(2));
+        }
+        return {
+            ...sanitizedUser,
+            age,
+            bmi,
+        };
     }
     async updateUserProfile(userId, updateUserProfileDto) {
+        this.logger.log(`[updateUserProfile] Attempting to update profile for userId: ${userId}`);
+        this.logger.debug(`[updateUserProfile] Received DTO: ${JSON.stringify(updateUserProfileDto)}`);
         const user = await this.userRepository.findOne({ where: { id: userId } });
         if (!user) {
+            this.logger.warn(`[updateUserProfile] User not found for userId: ${userId}`);
             throw new common_1.NotFoundException('User not found');
         }
+        this.logger.log(`[updateUserProfile] Found user: ${user.email} (ID: ${user.id})`);
+        this.logger.debug(`[updateUserProfile] User before update: ${JSON.stringify(this.sanitizeUser(user))}`);
         Object.assign(user, updateUserProfileDto);
+        this.logger.debug(`[updateUserProfile] User object after Object.assign: ${JSON.stringify(this.sanitizeUser(user))}`);
         const updatedUser = await this.userRepository.save(user);
-        return this.sanitizeUser(updatedUser);
+        this.logger.log(`[updateUserProfile] User saved. Returned from repository: ${updatedUser.email} (ID: ${updatedUser.id})`);
+        this.logger.debug(`[updateUserProfile] User after save: ${JSON.stringify(this.sanitizeUser(updatedUser))}`);
+        let age = null;
+        if (updatedUser.dateOfBirth) {
+            const birthDate = new Date(updatedUser.dateOfBirth);
+            const today = new Date();
+            age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+        }
+        let bmi = null;
+        if (updatedUser.heightCm && updatedUser.weightKg && updatedUser.heightCm > 0) {
+            const heightInMeters = updatedUser.heightCm / 100;
+            bmi = parseFloat((updatedUser.weightKg / (heightInMeters * heightInMeters)).toFixed(2));
+        }
+        const sanitizedUpdatedUser = this.sanitizeUser(updatedUser);
+        this.logger.log(`[updateUserProfile] Returning sanitized user: ${sanitizedUpdatedUser.email} (ID: ${sanitizedUpdatedUser.id})`);
+        return {
+            ...sanitizedUpdatedUser,
+            age,
+            bmi,
+        };
     }
 };
 exports.AuthService = AuthService;
-exports.AuthService = AuthService = __decorate([
+exports.AuthService = AuthService = AuthService_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(models_1.User)),
     __metadata("design:paramtypes", [typeorm_2.Repository,

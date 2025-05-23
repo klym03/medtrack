@@ -11,15 +11,18 @@ import {
   ParseUUIDPipe,
   HttpCode,
   HttpStatus,
+  Logger, // <--- Додано Logger
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../../shared/jwt-auth.guard'; // Шлях до вашого JwtAuthGuard
+import { JwtAuthGuard } from '@shared/jwt-auth.guard'; // Шлях до вашого JwtAuthGuard
 import { BloodPressureService } from './blood-pressure.service';
 import { CreateBloodPressureReadingDto, UpdateBloodPressureReadingDto } from './dto';
-import { BloodPressureReading } from '../../../../shared/models/blood-pressure-reading.entity';
+import { BloodPressureReading } from '@shared/models/blood-pressure-reading.entity';
 
 @Controller('blood-pressure') // Базовий шлях для цього контролера
 @UseGuards(JwtAuthGuard) // Застосовуємо JWT Guard до всіх ендпоінтів
 export class BloodPressureController {
+  private readonly logger = new Logger(BloodPressureController.name); // <--- Ініціалізація Logger
+
   constructor(private readonly bpService: BloodPressureService) {}
 
   @Post()
@@ -28,14 +31,16 @@ export class BloodPressureController {
     @Request() req: any, // Отримуємо об'єкт запиту, щоб дістати userId
     @Body() createDto: CreateBloodPressureReadingDto,
   ): Promise<BloodPressureReading> {
-    const userId = req.user.userId; // Отримуємо userId з об'єкта user, доданого JwtStrategy
+    this.logger.log(`Attempting to create blood pressure reading. User object from request: ${JSON.stringify(req.user)}`); // <--- Логування req.user
+    const userId = req.user.id; // <--- Повернуто на req.user.id
+    this.logger.log(`Extracted userId: ${userId}`); // <--- Логування userId
     return this.bpService.create(userId, createDto);
   }
 
   // Ендпоінт для отримання всіх записів тиску поточного користувача
   @Get('my')
   async findAllMyReadings(@Request() req: any): Promise<BloodPressureReading[]> {
-    const userId = req.user.userId;
+    const userId = req.user.id; // <--- Повернуто на req.user.id
     return this.bpService.findAllByUser(userId);
   }
 
@@ -53,7 +58,7 @@ export class BloodPressureController {
     @Param('readingId', ParseUUIDPipe) readingId: string,
     @Request() req: any,
   ): Promise<BloodPressureReading> {
-    const userId = req.user.userId;
+    const userId = req.user.id; // <--- Повернуто на req.user.id
     return this.bpService.findOne(readingId, userId);
   }
 
@@ -63,7 +68,7 @@ export class BloodPressureController {
     @Request() req: any,
     @Body() updateDto: UpdateBloodPressureReadingDto,
   ): Promise<BloodPressureReading> {
-    const userId = req.user.userId;
+    const userId = req.user.id; // <--- Повернуто на req.user.id
     return this.bpService.update(readingId, userId, updateDto);
   }
 
@@ -73,7 +78,7 @@ export class BloodPressureController {
     @Param('readingId', ParseUUIDPipe) readingId: string,
     @Request() req: any,
   ): Promise<void> {
-    const userId = req.user.userId;
+    const userId = req.user.id; // <--- Повернуто на req.user.id
     return this.bpService.remove(readingId, userId);
   }
 } 

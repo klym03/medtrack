@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateAnalysisDto = void 0;
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
-const create_indicator_dto_1 = require("./create-indicator.dto");
+const update_indicator_dto_1 = require("./update-indicator.dto");
 class UpdateAnalysisDto {
 }
 exports.UpdateAnalysisDto = UpdateAnalysisDto;
@@ -42,7 +42,7 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.ValidateNested)({ each: true }),
-    (0, class_transformer_1.Type)(() => create_indicator_dto_1.CreateIndicatorDto),
+    (0, class_transformer_1.Type)(() => update_indicator_dto_1.UpdateIndicatorDto),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Array)
 ], UpdateAnalysisDto.prototype, "indicators", void 0);

@@ -34,6 +34,18 @@ __decorate([
     __metadata("design:type", Object)
 ], Analysis.prototype, "filename", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 255, nullable: true }),
+    __metadata("design:type", Object)
+], Analysis.prototype, "originalName", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'varchar', length: 100, nullable: true }),
+    __metadata("design:type", Object)
+], Analysis.prototype, "mimeType", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'int', nullable: true }),
+    __metadata("design:type", Object)
+], Analysis.prototype, "size", void 0);
+__decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
 ], Analysis.prototype, "uploadTimestamp", void 0);

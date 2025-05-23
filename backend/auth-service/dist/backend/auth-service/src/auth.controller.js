@@ -11,28 +11,33 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var AuthController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const dto_1 = require("./dto");
 const passport_1 = require("@nestjs/passport");
-let AuthController = class AuthController {
+let AuthController = AuthController_1 = class AuthController {
     constructor(authService) {
         this.authService = authService;
+        this.logger = new common_1.Logger(AuthController_1.name);
     }
     async register(createUserDto) {
-        return this.authService.register(createUserDto);
+        this.logger.log('Attempting to register user...');
+        this.logger.log('Received DTO:', JSON.stringify(createUserDto));
+        const registeredUser = await this.authService.register(createUserDto);
+        return registeredUser;
     }
     async login(loginUserDto) {
         return this.authService.login(loginUserDto);
     }
     async getProfile(req) {
-        const userId = req.user.sub;
+        const userId = req.user.id;
         return this.authService.getUserProfile(userId);
     }
     async updateProfile(req, updateUserProfileDto) {
-        const userId = req.user.sub;
+        const userId = req.user.id;
         return this.authService.updateUserProfile(userId, updateUserProfileDto);
     }
 };
@@ -70,7 +75,7 @@ __decorate([
     __metadata("design:paramtypes", [Object, dto_1.UpdateUserProfileDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "updateProfile", null);
-exports.AuthController = AuthController = __decorate([
+exports.AuthController = AuthController = AuthController_1 = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
